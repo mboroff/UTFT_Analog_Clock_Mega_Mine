@@ -99,7 +99,7 @@ void loop()
     if (blankCtr > 2000) {
         blankCtr = 0;
         myGLCD.setColor(VGA_BLACK);
-        myGLCD.fillRect(220, 217, 319, 239);
+        myGLCD.fillRect(215, 217, 319, 239);
         myGLCD.setColor(VGA_WHITE);
         }
 
@@ -113,7 +113,7 @@ void loop()
        if (blinkSw == false) {
            myGLCD.setColor(VGA_RED);
            for (int i=0; i<5; i++){
-                myGLCD.drawCircle(220, 225, i);
+                myGLCD.drawCircle(215, 225, i);
                 }
            }
 	// Message with a good checksum received, dump it.
@@ -138,18 +138,18 @@ void loop()
         String y = "";
         y.concat(tempf);
         y.concat(" F");
-        myGLCD.print(y, 235,  220);
+        myGLCD.print(y, 230,  220);
         Serial.print(myHour); Serial.print(":"); Serial.print(myMinute); Serial.print(":"); Serial.println(mySecond);
         String myDate = rtc.getDateStr();
         Serial.println(myDate);
         myGLCD.setFont(BigFont);
         myGLCD.setColor(VGA_WHITE);
         myGLCD.setBackColor(VGA_BLACK);
-        myGLCD.drawCircle(270, 220, 2);
+        myGLCD.drawCircle(265, 220, 2);
         if (blinkSw == true) {
             myGLCD.setColor(VGA_BLACK);
             for (int i=0; i<5; i++){
-                 myGLCD.drawCircle(220, 225, i);
+                 myGLCD.drawCircle(215, 225, i);
                  }
             }
     Serial.println();
@@ -252,7 +252,7 @@ void loop()
           }
       x.concat(mySecond);
       x.concat("  ");
-      myGLCD.print(x, 235,  200);
+      myGLCD.print(x, 230,  200);
       String myDate = rtc.getDateStr();
       int searchIndex = 0;
       int searchIndex2 = 0;
@@ -270,21 +270,13 @@ void loop()
       d.concat(myMonthday);
       d.concat("/");
       d.concat(myYear);
-      myGLCD.print(d, 235, 180);
+      myGLCD.print(d, 230, 180);
       
       myGLCD.setFont(BigFont);
   }
 }
 
 void getDate(){
-  // Send Day-of-Week
- // Serial.print(rtc.getDOWStr());
- // Serial.print(" ");
-  
-  // Send date
- // Serial.print(rtc.getDateStr());
- // Serial.print(" -- ");
-
   // Send time
   //Serial.println(rtc.getTimeStr());
   String timeString = rtc.getTimeStr();
