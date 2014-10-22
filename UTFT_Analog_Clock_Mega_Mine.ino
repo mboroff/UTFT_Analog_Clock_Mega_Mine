@@ -65,7 +65,8 @@ void setup()
   rtc.halt(false);
     rtc.setDate(10, 19, 2014);   // Set the date to October 3th, 2010
    myGLCD.InitLCD();
-   myGLCD.setFont(BigFont);
+   myGLCD.setFont(SmallFont); 
+   myGLCD.setColor(VGA_WHITE);
      myGLCD.clrScr();
      getDate();
  drawDisplay(); 
@@ -99,61 +100,107 @@ void loop()
     if (blankCtr > 2000) {
         blankCtr = 0;
         myGLCD.setColor(VGA_BLACK);
-        myGLCD.fillRect(215, 217, 319, 239);
+        myGLCD.fillRect(210, 217, 319, 239);
         myGLCD.setColor(VGA_WHITE);
         }
 
     if (driver.recv(buf, &buflen)){ // Non-blocking
-        blankCtr = 0;
-      if (blinkSw == false){
-          blinkSw = true;
-          }  else {
-                    blinkSw = false;
-                   }
-       if (blinkSw == false) {
-           myGLCD.setColor(VGA_RED);
-           for (int i=0; i<5; i++){
-                myGLCD.drawCircle(215, 225, i);
-                }
-           }
 	// Message with a good checksum received, dump it.
-        driver.printBuffer("Got:", buf, buflen);
-        char tempf[5] = "    ";
-        int tempfCtr = 0;
-        boolean foundSw = false;
-        for (int i = 0; i < buflen; i++) {
-             if (buf[i] == 0x46) {
-                 foundSw = true;
-                 i++;
-                 }
-             if (foundSw == true) {
-                 tempf[tempfCtr] = buf[i];
-//               sprintf(tempf[tempfCtr], "%01c", buf[i]);
-                 tempfCtr++;
-                 }
-              }
-        Serial.print("tempf = "); Serial.println(tempf);
-        myGLCD.setFont(SmallFont); 
-        myGLCD.setColor(VGA_WHITE);
-        String y = "";
-        y.concat(tempf);
-        y.concat(" F");
-        myGLCD.print(y, 230,  220);
-        Serial.print(myHour); Serial.print(":"); Serial.print(myMinute); Serial.print(":"); Serial.println(mySecond);
-        String myDate = rtc.getDateStr();
-        Serial.println(myDate);
-        myGLCD.setFont(BigFont);
-        myGLCD.setColor(VGA_WHITE);
-        myGLCD.setBackColor(VGA_BLACK);
-        myGLCD.drawCircle(265, 220, 2);
-        if (blinkSw == true) {
-            myGLCD.setColor(VGA_BLACK);
+        blankCtr = 0;
+        if (blinkSw == false){
+            blinkSw = true;
+            myGLCD.setColor(VGA_RED);
             for (int i=0; i<5; i++){
                  myGLCD.drawCircle(215, 225, i);
                  }
+            }  else {
+                     blinkSw = false;
+                     myGLCD.setColor(VGA_BLACK);
+                     for (int i=0; i<5; i++){
+                         myGLCD.drawCircle(215, 225, i);
+                         }
+                     }
+        driver.printBuffer("Got:", buf, buflen);
+        myGLCD.setColor(VGA_WHITE);
+        char recv[5] = "    ";
+        if (buf[0] == 'P') {
+            if (buf[1] == 'C') {
+                Serial.print("Probe tempC: "); 
+                for (int i = 2; i < buflen; i++) {
+                     recv[i - 2] = buf[i];
+                     }
+                String y = "P ";
+                y.concat(recv);
+                y.concat(" C  ");
+                myGLCD.print(y, 240, 5);
+                String myDate = rtc.getDateStr();
+                Serial.println(myDate);  
+//                myGLCD.setBackColor(VGA_BLACK);
+                myGLCD.drawCircle(290, 5, 2);
+                }
+            if (buf[1] == 'F') {
+              Serial.print("Probe tempF: "); 
+                for (int i = 2; i < buflen; i++) {
+                     recv[i - 2] = buf[i];
+                     }
+                String y = "";
+                y.concat(recv);
+                y.concat(" F");
+                myGLCD.print(y, 230,  220);
+                String myDate = rtc.getDateStr();
+                Serial.println(myDate);  
+//                myGLCD.setBackColor(VGA_BLACK);
+                myGLCD.drawCircle(265, 220, 2);
+                }
             }
-    Serial.println();
-    }
+        if (buf[0] == 'D') {
+            if (buf[1] == 'C') {
+                Serial.print("DHT22 tempC: "); 
+                for (int i = 2; i < buflen; i++) {
+                     recv[i - 2] = buf[i];
+                     }
+                String y = "D ";
+                y.concat(recv);
+                y.concat(" C  ");
+                myGLCD.print(y, 240, 20);
+                String myDate = rtc.getDateStr();
+                Serial.println(myDate);  
+//                myGLCD.setBackColor(VGA_BLACK);
+                myGLCD.drawCircle(290, 20, 2);
+                }
+            if (buf[1] == 'F') {
+                Serial.print("DHT22 tempF: "); 
+                for (int i = 2; i < buflen; i++) {
+                     recv[i - 2] = buf[i];
+                     }
+                String y = "";
+                y.concat(recv);
+                y.concat(" F  ");
+                myGLCD.print(y, 257, 35);
+                String myDate = rtc.getDateStr();
+                Serial.println(myDate);  
+//                myGLCD.setBackColor(VGA_BLACK);
+                myGLCD.drawCircle(290, 35, 2);
+                }
+            if (buf[1] == 'H') {
+                Serial.print("Probe humidity: "); 
+                for (int i = 2; i < buflen; i++) {
+                     recv[i - 2] = buf[i];
+                     }
+                String y = "";
+                y.concat(recv);
+                y.concat("%H  ");
+                myGLCD.print(y, 257, 50);
+                String myDate = rtc.getDateStr();
+                Serial.println(myDate);  
+                }
+            }
+       Serial.println(recv);
+       Serial.print(myHour); Serial.print(":"); Serial.print(myMinute); Serial.print(":"); Serial.println(mySecond);        
+       Serial.println();
+       }
+
+
 
   getTouch();
   while (ty != 0) {
@@ -259,11 +306,11 @@ void loop()
       searchIndex = myDate.indexOf('.');
       searchIndex2 = myDate.indexOf('.', searchIndex + 1);
       String myMonthday = myDate.substring(0, searchIndex);
-      Serial.println(myMonthday);
+ //     Serial.println(myMonthday);
       String myMonth = myDate.substring(searchIndex+1, searchIndex2);
-      Serial.println(myMonth);
+ //     Serial.println(myMonth);
       String myYear = myDate.substring(searchIndex2 +1, myDate.length());
-      Serial.println(myYear);
+ //     Serial.println(myYear);
       String d = "";
       d.concat(myMonth);
       d.concat("/");
@@ -272,7 +319,7 @@ void loop()
       d.concat(myYear);
       myGLCD.print(d, 230, 180);
       
-      myGLCD.setFont(BigFont);
+   //   myGLCD.setFont(BigFont);
   }
 }
 
