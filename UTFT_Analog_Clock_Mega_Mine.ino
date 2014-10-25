@@ -100,7 +100,8 @@ void loop()
     if (blankCtr > 2000) {
         blankCtr = 0;
         myGLCD.setColor(VGA_BLACK);
-        myGLCD.fillRect(210, 217, 319, 239);
+        myGLCD.fillRect(240, 0, 319, 70);
+        myGLCD.fillRect(210, 217, 319, 239);        
         myGLCD.setColor(VGA_WHITE);
         }
 
@@ -135,7 +136,6 @@ void loop()
                 myGLCD.print(y, 240, 5);
                 String myDate = rtc.getDateStr();
                 Serial.println(myDate);  
-//                myGLCD.setBackColor(VGA_BLACK);
                 myGLCD.drawCircle(290, 5, 2);
                 }
             if (buf[1] == 'F') {
@@ -149,7 +149,6 @@ void loop()
                 myGLCD.print(y, 230,  220);
                 String myDate = rtc.getDateStr();
                 Serial.println(myDate);  
-//                myGLCD.setBackColor(VGA_BLACK);
                 myGLCD.drawCircle(265, 220, 2);
                 }
             }
@@ -165,7 +164,6 @@ void loop()
                 myGLCD.print(y, 240, 20);
                 String myDate = rtc.getDateStr();
                 Serial.println(myDate);  
-//                myGLCD.setBackColor(VGA_BLACK);
                 myGLCD.drawCircle(290, 20, 2);
                 }
             if (buf[1] == 'F') {
@@ -179,7 +177,6 @@ void loop()
                 myGLCD.print(y, 257, 35);
                 String myDate = rtc.getDateStr();
                 Serial.println(myDate);  
-//                myGLCD.setBackColor(VGA_BLACK);
                 myGLCD.drawCircle(290, 35, 2);
                 }
             if (buf[1] == 'H') {
@@ -199,8 +196,6 @@ void loop()
        Serial.print(myHour); Serial.print(":"); Serial.print(myMinute); Serial.print(":"); Serial.println(mySecond);        
        Serial.println();
        }
-
-
 
   getTouch();
   while (ty != 0) {
